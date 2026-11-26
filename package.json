@@ -1,0 +1,39 @@
+{
+  "name": "seo-advisor-mcp",
+  "version": "0.1.0",
+  "description": "An MCP server that turns Claude into an SEO, AEO and site-performance advisor: Google Search Console, GA4, PageSpeed Insights (Lighthouse) and on-page audits.",
+  "type": "module",
+  "main": "server.mjs",
+  "bin": {
+    "seo-advisor-mcp": "server.mjs"
+  },
+  "files": [
+    "server.mjs",
+    "src",
+    "docs",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "mcp",
+    "seo",
+    "aeo",
+    "search-console",
+    "google-analytics",
+    "lighthouse",
+    "claude"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "cheerio": "^1.2.0",
+    "zod": "^4.6.7"
+  }
+}

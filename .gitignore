@@ -1,0 +1,15 @@
+node_modules/
+.env
+.env.*
+!.env.example
+# Never commit credentials
+*service-account*.json
+key.json
+*-key.json
+.DS_Store
+*.mcpb
+
+.wrangler/
+.dev.vars
+wrangler.local.jsonc
+remote/wrangler.jsonc

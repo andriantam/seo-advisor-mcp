@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "seo-advisor",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-01",
+  // global_fetch_strictly_public: outbound fetch() always goes to the public internet, never to other
+  // Workers or services on the same Cloudflare account. Part of the SSRF protection.
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "kv_namespaces": [
+    // Create with: npx wrangler kv namespace create OAUTH_KV   then paste the id here.
+    { "binding": "OAUTH_KV", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  ],
+  // Usage counts (see docs/self-hosting.md). ANALYTICS=off records nothing. Set it to "on" and add the secret
+  // ANALYTICS_SECRET (wrangler secret put ANALYTICS_SECRET) to count. Remove the binding below if you
+  // do not use Cloudflare Analytics Engine: the server then works without it.
+  "vars": { "ANALYTICS": "off" },
+  "analytics_engine_datasets": [{ "binding": "ANALYTICS_ENGINE", "dataset": "seo-advisor-analytics" }],
+  "ratelimits": [
+    { "name": "TOOL_LIMITER", "namespace_id": "1001", "simple": { "limit": 60, "period": 60 } },
+    { "name": "HEAVY_LIMITER", "namespace_id": "1002", "simple": { "limit": 10, "period": 60 } },
+    { "name": "AUTH_LIMITER", "namespace_id": "1003", "simple": { "limit": 20, "period": 60 } }
+  ],
+  // KEEP THIS OFF. Bing's API puts the key in the request URL, so request logging/tracing would record users' keys.
+  "observability": { "enabled": false }
+}

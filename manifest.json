@@ -1,0 +1,122 @@
+{
+  "manifest_version": "0.3",
+  "name": "seo-advisor",
+  "display_name": "SEO Advisor",
+  "version": "0.1.0",
+  "description": "SEO, AEO and site-performance advisor: Search Console, GA4, Bing Webmaster, Lighthouse and on-page audits.",
+  "long_description": "Runs locally on your computer. Your credentials stay on disk and are never sent to Claude; Claude only sees each tool's results. Read-only: it cannot change your site, Search Console or Analytics. Content drafts are saved to a local folder and never published.",
+  "author": { "name": "Andrian Tam" },
+  "license": "MIT",
+  "keywords": ["seo", "aeo", "search-console", "analytics", "lighthouse", "bing"],
+  "server": {
+    "type": "node",
+    "entry_point": "server.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server.mjs"],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${user_config.google_key_file}",
+        "GSC_SITE_URL": "${user_config.gsc_site_url}",
+        "GA_PROPERTY_ID": "${user_config.ga_property_id}",
+        "PSI_API_KEY": "${user_config.psi_api_key}",
+        "BING_WEBMASTER_API_KEY": "${user_config.bing_api_key}",
+        "BING_WEBMASTER_API_KEY_FILE": "${user_config.bing_key_file}",
+        "BING_SITE_URL": "${user_config.bing_site_url}",
+        "CLOUDFLARE_API_TOKEN": "${user_config.cloudflare_api_token}",
+        "CLOUDFLARE_ZONE_ID": "${user_config.cloudflare_zone_id}",
+        "TRENDS_GEO": "${user_config.trends_geo}",
+        "SEO_DRAFTS_DIR": "${user_config.drafts_dir}"
+      }
+    }
+  },
+  "user_config": {
+    "google_key_file": {
+      "type": "file",
+      "title": "Google service-account key (JSON)",
+      "description": "Key file for Search Console and GA4 access. Stays on this computer.",
+      "required": false
+    },
+    "gsc_site_url": {
+      "type": "string",
+      "title": "Search Console property",
+      "description": "e.g. sc-domain:example.com or https://example.com/",
+      "required": false
+    },
+    "ga_property_id": {
+      "type": "string",
+      "title": "GA4 property ID",
+      "description": "Numeric ID, e.g. 123456789",
+      "required": false
+    },
+    "psi_api_key": {
+      "type": "string",
+      "title": "PageSpeed Insights API key",
+      "description": "Free key from Google Cloud. Optional but avoids rate limits.",
+      "sensitive": true,
+      "required": false
+    },
+    "bing_api_key": {
+      "type": "string",
+      "title": "Bing Webmaster API key",
+      "description": "Paste the key here. Stored encrypted by Claude Desktop. Use this OR the key file below.",
+      "sensitive": true,
+      "required": false
+    },
+    "bing_key_file": {
+      "type": "file",
+      "title": "Bing Webmaster API key file (alternative)",
+      "description": "A text file containing the key. Pick a file; do not paste the key itself here.",
+      "required": false
+    },
+    "bing_site_url": {
+      "type": "string",
+      "title": "Bing site URL",
+      "description": "e.g. https://example.com/",
+      "required": false
+    },
+    "cloudflare_api_token": {
+      "type": "string",
+      "title": "Cloudflare API token (optional)",
+      "description": "Enables Cloudflare Radar domain rank, and your site's traffic if you add the zone ID below. Create a read-only token in the Cloudflare dashboard. Leave empty to skip Cloudflare.",
+      "sensitive": true,
+      "required": false
+    },
+    "cloudflare_zone_id": {
+      "type": "string",
+      "title": "Cloudflare zone ID (optional)",
+      "description": "Only for a site on your Cloudflare account. Found on the site's Overview page.",
+      "required": false
+    },
+    "trends_geo": {
+      "type": "string",
+      "title": "Trends country code",
+      "description": "Two-letter country code(s) for trending searches. Separate several with commas (max 5), e.g. MY,SG.",
+      "default": "US",
+      "required": false
+    },
+    "drafts_dir": {
+      "type": "directory",
+      "title": "Drafts folder",
+      "description": "Where article drafts are saved. Leave empty for ~/seo-advisor-drafts.",
+      "required": false
+    }
+  },
+  "tools": [
+    {"name": "gsc_list_sites"}, {"name": "gsc_search_analytics"}, {"name": "seo_find_opportunities"},
+    {"name": "gsc_list_sitemaps"}, {"name": "gsc_inspect_url"}, {"name": "ga_run_report"}, {"name": "ga_realtime"},
+    {"name": "bing_list_sites"}, {"name": "bing_query_stats"}, {"name": "bing_page_stats"}, {"name": "bing_traffic_stats"},
+    {"name": "bing_crawl_stats"}, {"name": "bing_crawl_issues"}, {"name": "bing_link_counts"},
+    {"name": "psi_report"}, {"name": "seo_audit_page"}, {"name": "seo_audit_site"}, {"name": "trends_trending_now"},
+    {"name": "seo_competitor_gaps"}, {"name": "content_save_draft"}, {"name": "content_list_drafts"},
+    {"name": "cf_radar_domain_rank"}, {"name": "cf_zone_traffic"}
+  ],
+  "prompts": [
+    {"name": "seo_health_check", "text": "Run the seo_health_check workflow"},
+    {"name": "find_traffic_opportunities", "text": "Run the find_traffic_opportunities workflow"},
+    {"name": "content_ideas_from_trends", "text": "Run the content_ideas_from_trends workflow"},
+    {"name": "competitor_content_plan", "text": "Run the competitor_content_plan workflow"},
+    {"name": "aeo_check", "text": "Run the aeo_check workflow"},
+    {"name": "performance_vs_engagement", "text": "Run the performance_vs_engagement workflow"}
+  ],
+  "compatibility": { "platforms": ["darwin", "win32", "linux"], "runtimes": { "node": ">=20" } }
+}
